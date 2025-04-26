@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String?
+  email     String  @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Post Post[]
+    likes Like[]
+    comments Comment[]
+  followers Follow[] @relation("Follower")
+  following Follow[] @relation("Following")
+  profileImage String?
+  bio        String?
+  website    String?
+  role       String @default("USER") // USER, ADMIN
+  isVerified Boolean  @default(false)
+  isBlocked  Boolean  @default(false)
+    lastLogin  DateTime?
+    lastPasswordChange DateTime?
+    location  String?
+    Twitter    String?
+    Instagram  String?
+    Facebook   String?
+    LinkedIn   String?
+    GitHub     String?
+
+}
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  published Boolean  @default(false)
+  author    User   @relation(fields: [authorId], references: [id])
+  authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  comments  Comment[]
+  likes     Like[]
+  category Category[]
+  tags      Tag[]
+  image     String?
+  
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  post      Post   @relation(fields: [postId], references: [id])
+  postId    String
+  author    User   @relation(fields: [authorId], references: [id])
+    authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  post      Post   @relation(fields: [postId], references: [id])
+  postId    String
+  user      User   @relation(fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model Follow {
+  id        String   @id @default(cuid())
+  follower  User   @relation("Follower", fields: [followerId], references: [id])
+  followerId String
+  following User   @relation("Following", fields: [followingId], references: [id])
+  followingId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  posts     Post[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model Tag {
+  id        String   @id @default(cuid())
+  name      String
+  posts     Post[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
