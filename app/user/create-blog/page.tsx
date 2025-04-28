@@ -17,7 +17,7 @@ export default function CreateBlogPage() {
     title: "",
     category: "",
     content: "",
-    coverImage: null,
+    image: null,
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -30,12 +30,16 @@ export default function CreateBlogPage() {
   }
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Blog post data:", formData)
-
-    // Mock submission - in a real app, you would send this data to your backend
-    alert("Blog post created successfully!")
-    router.push("/user/dashboard")
+    
+    const response = fetch(`/api/blog/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+     // Optionally, you can redirect the user to the dashboard or another page
+    router.push("/user/dashboard");
   }
 
   return (
@@ -68,11 +72,11 @@ export default function CreateBlogPage() {
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="technology">Technology</SelectItem>
-                  <SelectItem value="lifestyle">Lifestyle</SelectItem>
-                  <SelectItem value="travel">Travel</SelectItem>
-                  <SelectItem value="health">Health</SelectItem>
-                  <SelectItem value="business">Business</SelectItem>
+                  <SelectItem value="Technology">Technology</SelectItem>
+                  <SelectItem value="Lifestyle">Lifestyle</SelectItem>
+                  <SelectItem value="Travel">Travel</SelectItem>
+                  <SelectItem value="Health">Health</SelectItem>
+                  <SelectItem value="Business">Business</SelectItem>
                 </SelectContent>
               </Select>
             </div>

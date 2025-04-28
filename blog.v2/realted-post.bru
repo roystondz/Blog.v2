@@ -1,0 +1,15 @@
+meta {
+  name: realted-post
+  type: http
+  seq: 8
+}
+
+get {
+  url: /api/blog/related?category=lifestyle
+  body: none
+  auth: inherit
+}
+
+params:query {
+  category: lifestyle
+}

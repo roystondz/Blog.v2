@@ -1,105 +1,105 @@
-import Image from "next/image"
-import Link from "next/link"
-import { ArrowLeft, Clock, Share2, Bookmark } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import PostCard from "@/components/post-card"
-import NewsletterForm from "@/components/newsletter-form"
+"use client";
 
-export default function BlogPost({ params }: { params: { slug: string } }) {
-  // In a real app, you would fetch the post data based on the slug
-  const post = {
-    title: "The Future of Web Development: What's Next After React?",
-    excerpt:
-      "Exploring emerging technologies and frameworks that might shape the future of web development in the post-React era.",
-    coverImage: "/placeholder.svg?height=600&width=1200",
-    date: "April 20, 2025",
-    author: {
-      name: "Alex Johnson",
-      avatar: "/placeholder.svg?height=100&width=100",
-      bio: "Senior Developer Advocate and tech writer with a passion for emerging web technologies.",
-    },
-    category: "Technology",
-    readingTime: "5 min read",
-    content: `
-      <p>For over a decade, React has dominated the frontend development landscape, revolutionizing how we build user interfaces. But as with all technologies, evolution is inevitable. This article explores what might come next in the world of web development.</p>
-      
-      <h2>The Current State of React</h2>
-      
-      <p>React's component-based architecture and virtual DOM have made it the library of choice for countless developers and organizations. With the introduction of hooks in 2019 and server components more recently, React has continued to evolve and maintain its relevance.</p>
-      
-      <p>However, as web applications become increasingly complex and performance expectations rise, developers are beginning to explore alternatives that address some of React's limitations.</p>
-      
-      <h2>Emerging Frameworks and Approaches</h2>
-      
-      <p>Several new frameworks and approaches are gaining traction in the developer community:</p>
-      
-      <ul>
-        <li><strong>Svelte</strong>: Unlike React, Svelte shifts much of the work to compile time rather than runtime, resulting in highly optimized vanilla JavaScript.</li>
-        <li><strong>Solid</strong>: Inspired by React but with a more efficient reactivity system that doesn't use a virtual DOM.</li>
-        <li><strong>Qwik</strong>: Designed for instant loading with resumability rather than hydration.</li>
-        <li><strong>Islands Architecture</strong>: A pattern that focuses on selective hydration of interactive components.</li>
-      </ul>
-      
-      <h2>The Rise of Compiler-Based Approaches</h2>
-      
-      <p>One clear trend is the move toward compiler-based approaches that optimize code at build time rather than relying on runtime operations. This shift promises better performance and smaller bundle sizes.</p>
-      
-      <h2>AI-Assisted Development</h2>
-      
-      <p>Another significant trend is the integration of AI into the development workflow. Tools like GitHub Copilot are just the beginning. We can expect future frameworks to incorporate AI more deeply, potentially automating aspects of UI development that currently require manual coding.</p>
-      
-      <h2>Conclusion</h2>
-      
-      <p>While React isn't disappearing anytime soon, the web development landscape is diversifying. The future likely holds a more varied ecosystem where developers choose tools based on specific project needs rather than defaulting to a single dominant framework.</p>
-      
-      <p>As with any technological evolution, the key for developers is to stay curious, keep learning, and be willing to adapt as new approaches emerge.</p>
-    `,
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowLeft, Clock, Share2, Bookmark } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import PostCard from "@/components/post-card";
+import NewsletterForm from "@/components/newsletter-form";
+
+// Define types for Post and Author
+interface Author {
+  name: string;
+  image: string;
+  bio: string;
+}
+
+interface Post {
+  id: string;
+  title: string;
+  content: string;
+  category: string;
+  image: string;
+  author: string;
+  date: string;
+  excerpt: string;
+  coverImage: string;
+  readingTime: string;
+}
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  profileImage: string | null;
+  bio: string | null;
+  website: string | null;
+  role: "USER" | "ADMIN";
+  isVerified: boolean;
+  isBlocked: boolean;
+  lastLogin: string | null;
+  lastPasswordChange: string | null;
+  location: string | null;
+  socialLinks: {
+    Twitter: string | null;
+    Instagram: string | null;
+    Facebook: string | null;
+    LinkedIn: string | null;
+    GitHub: string | null;
+  };
+  joinDate: string | null;
+}
+
+export default function BlogPost() {
+  const params = useParams();
+  
+  const [slug, setSlug] = useState<string | undefined>(undefined);
+  const [post, setPost] = useState<Post | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [relatedPosts, setRelatedPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    // Extract the slug from URL params
+    if (params?.slug) {
+      const postSlug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
+      setSlug(postSlug);
+    }
+  }, [params]);
+
+  useEffect(() => {
+    if (slug) {
+      // Fetch the post data based on slug
+      const fetchPost = async () => {
+        try {
+          const postResponse = await fetch(`/api/blog/view?id=${slug}`);
+          const postData = await postResponse.json();
+          setPost(postData);
+
+          // Fetch user profile data
+          const userResponse = await fetch(`/api/user/profile`);
+          const userData = await userResponse.json();
+          setUser(userData);
+
+          // Fetch related posts
+          const relatedPostsResponse = await fetch(`/api/blog/related?category=${postData.category}`);
+          const relatedPostsData = await relatedPostsResponse.json();
+          setRelatedPosts(relatedPostsData);
+        } catch (error) {
+          console.error("Failed to fetch post", error);
+        }
+      };
+      fetchPost();
+    }
+  }, [slug]);
+
+  // Fallbacks for post and user data in case they're not available yet
+  if (!post || !user) {
+    return <div>Loading...</div>;
   }
-
-  // Mock related posts
-  const relatedPosts = [
-    {
-      id: "2",
-      title: "Understanding the JAMstack Architecture",
-      excerpt: "A deep dive into the JavaScript, APIs, and Markup architecture that's changing web development.",
-      coverImage: "/placeholder.svg?height=400&width=600",
-      date: "April 15, 2025",
-      author: {
-        name: "Emma Roberts",
-        avatar: "/placeholder.svg?height=100&width=100",
-      },
-      category: "Technology",
-      readingTime: "6 min read",
-    },
-    {
-      id: "3",
-      title: "Web Performance Optimization Techniques",
-      excerpt: "Essential strategies to make your websites load faster and provide better user experiences.",
-      coverImage: "/placeholder.svg?height=400&width=600",
-      date: "April 10, 2025",
-      author: {
-        name: "Marcus Chen",
-        avatar: "/placeholder.svg?height=100&width=100",
-      },
-      category: "Technology",
-      readingTime: "7 min read",
-    },
-    {
-      id: "4",
-      title: "The State of CSS in 2025",
-      excerpt: "Exploring the latest CSS features and how they're transforming web design possibilities.",
-      coverImage: "/placeholder.svg?height=400&width=600",
-      date: "April 5, 2025",
-      author: {
-        name: "Sophia Williams",
-        avatar: "/placeholder.svg?height=100&width=100",
-      },
-      category: "Technology",
-      readingTime: "5 min read",
-    },
-  ]
 
   return (
     <main className="min-h-screen">
@@ -120,16 +120,18 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
           <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
             <div className="flex items-center">
               <Avatar className="h-10 w-10 mr-3">
-                <AvatarImage src={post.author.avatar || "/placeholder.svg"} alt={post.author.name} />
-                <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
+                <AvatarImage src={user.profileImage || "/placeholder.svg"} alt={user.name} />
+                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
               </Avatar>
               <div>
-                <p className="font-medium">{post.author.name}</p>
-                <p className="text-sm text-muted-foreground">{post.date}</p>
+                <p className="font-medium">{user.name}</p>
+                {post.date && (
+                  <p className="text-sm text-muted-foreground">{post.date}</p>
+                )}
               </div>
             </div>
             <div className="flex items-center text-sm text-muted-foreground">
-              <Clock className="mr-1" size={16} /> {post.readingTime}
+              <Clock className="mr-1" size={16} />
             </div>
           </div>
         </div>
@@ -137,7 +139,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
         {/* Cover Image */}
         <div className="mb-8 rounded-lg overflow-hidden">
           <Image
-            src={post.coverImage || "/placeholder.svg"}
+            src={post.image || "/placeholder.svg"}
             alt={post.title}
             width={1200}
             height={600}
@@ -173,12 +175,12 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
         <div className="bg-muted p-6 rounded-lg mb-12">
           <div className="flex items-start gap-4">
             <Avatar className="h-12 w-12">
-              <AvatarImage src={post.author.avatar || "/placeholder.svg"} alt={post.author.name} />
-              <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
+              <AvatarImage src={user.profileImage || "/placeholder.svg"} alt={user.name} />
+              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
             </Avatar>
             <div>
-              <h3 className="font-bold mb-2">About {post.author.name}</h3>
-              <p className="text-muted-foreground">{post.author.bio}</p>
+              <h3 className="font-bold mb-2">About {user.name}</h3>
+              <p className="text-muted-foreground">{user.bio}</p>
             </div>
           </div>
         </div>
@@ -188,8 +190,8 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
       <section className="container mx-auto px-4 mb-16">
         <h2 className="text-2xl font-bold mb-8">Related Articles</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {relatedPosts.map((post) => (
-            <PostCard key={post.id} post={post} />
+          {relatedPosts.map((relatedPost) => (
+            <PostCard key={relatedPost.id} post={relatedPost} />
           ))}
         </div>
       </section>
@@ -199,5 +201,5 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
         <NewsletterForm />
       </section>
     </main>
-  )
+  );
 }

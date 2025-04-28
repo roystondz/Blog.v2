@@ -1,44 +1,109 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import BlogCard from "@/components/blog-card"
+"use client";
+
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import BlogCard from "@/components/blog-card";
+import { useEffect, useState } from "react";
+
+interface Post {
+  id: string;
+  title: string;
+  content: string;
+  category: string;
+  image: string;
+  author: string;
+  date: string;
+  excerpt: string;
+  coverImage: string;
+  readingTime: string;
+  createdAt: string;
+  updatedAt: string;
+  published: boolean;
+}
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  createdAt: string;
+  updatedAt: string;
+  profileImage: string | null;
+  bio: string | null;
+  website: string | null;
+  role: "USER" | "ADMIN";
+  isVerified: boolean;
+  isBlocked: boolean;
+  lastLogin: string | null;
+  lastPasswordChange: string | null;
+  location: string | null;
+  Twitter: string | null;
+  Instagram: string | null;
+  Facebook: string | null;
+  LinkedIn: string | null;
+  GitHub: string | null;
+  joinDate: string | null;
+}
 
 export default function Home() {
   // Mock data for blog posts
-  const featuredPosts = [
-    {
-      id: "1",
-      title: "Getting Started with Web Development",
-      excerpt: "A beginner's guide to modern web development tools and frameworks.",
-      coverImage: "/placeholder.svg?height=400&width=600",
-      date: "April 20, 2025",
-      author: {
-        name: "Alex Johnson",
-        avatar: "/placeholder.svg?height=100&width=100",
-      },
-    },
-    {
-      id: "2",
-      title: "The Future of AI in Everyday Life",
-      excerpt: "How artificial intelligence is transforming our daily experiences.",
-      coverImage: "/placeholder.svg?height=400&width=600",
-      date: "April 18, 2025",
-      author: {
-        name: "Emma Roberts",
-        avatar: "/placeholder.svg?height=100&width=100",
-      },
-    },
-    {
-      id: "3",
-      title: "Sustainable Living: Simple Steps",
-      excerpt: "Small changes that make a big difference for our planet.",
-      coverImage: "/placeholder.svg?height=400&width=600",
-      date: "April 15, 2025",
-      author: {
-        name: "Marcus Chen",
-        avatar: "/placeholder.svg?height=100&width=100",
-      },
-    },
-  ]
+  const [post, setPost] = useState<Post>({
+    id: "",
+    title: "",
+    content: "",
+    category: "",
+    image: "",
+    author: "",
+    date: "",
+    excerpt: "",
+    coverImage: "",
+    readingTime: "",
+    createdAt: "",
+    updatedAt: "",
+    published: false,
+  });
+
+  const [user, setUser] = useState<User>({
+    id: "",
+    name: "",
+    email: "",
+    password: "",
+    createdAt: "",
+    updatedAt: "",
+    profileImage: null,
+    bio: null,
+    website: null,
+    role: "USER",
+    isVerified: false,
+    isBlocked: false,
+    lastLogin: null,
+    lastPasswordChange: null,
+    location: null,
+    Twitter: null,
+    Instagram: null,
+    Facebook: null,
+    LinkedIn: null,
+    GitHub: null,
+    joinDate: null,
+  });
+
+  // Related posts data (can be fetched or mocked for now)
+  const [featuredPosts, setFeaturedPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const response = await fetch(`/api/blog/featured`);
+        const data = await response.json();
+        setFeaturedPosts(data);
+        console.log("Fetched post data:", data);
+      } catch (error) {
+        console.error("Failed to fetch post", error);
+      }
+    };
+
+    fetchPost(); // Run the fetch only once when the component mounts
+  }, []); // Empty dependency array ensures the effect runs only once
 
   return (
     <main className="min-h-screen">
@@ -64,9 +129,11 @@ export default function Home() {
       <section className="container mx-auto px-4 py-12">
         <h2 className="text-2xl font-bold mb-8 text-teal-800 dark:text-teal-300">Featured Posts</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {featuredPosts.map((post) => (
-            <BlogCard key={post.id} post={post} />
-          ))}
+          {featuredPosts.length > 0 ? (
+            featuredPosts.map((post) => <BlogCard key={post.id} post={post} />)
+          ) : (
+            <p>No featured posts available.</p> // Fallback message
+          )}
         </div>
         <div className="text-center mt-10">
           <Button asChild variant="outline" className="border-teal-600 text-teal-600 hover:bg-teal-50">
@@ -88,5 +155,5 @@ export default function Home() {
         </div>
       </section>
     </main>
-  )
+  );
 }

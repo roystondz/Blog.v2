@@ -1,0 +1,21 @@
+meta {
+  name: create-blog
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://localhost:3000/api/user/create-blog
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title":"test",
+    "content":"Hellow",
+    "authorId":"cm9y0ef570000bj0vkr1yaxh2",
+    "category":"Technology",
+    "image":null  
+  }
+}

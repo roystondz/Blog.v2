@@ -14,7 +14,7 @@ interface Post {
   excerpt: string
   coverImage: string
   date: string
-  author: Author
+  author: string
   category: string
   readingTime: string
 }
