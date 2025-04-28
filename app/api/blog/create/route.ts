@@ -4,26 +4,40 @@ import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 
 export async function POST(request: Request) {
-  const { title, content, category, image } = await request.json();
+  let body;
+  try {
+    body = await request.json();
+  } catch (error) {
+    console.error("Invalid JSON body:", error);
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+
+  const { title, content, category, image } = body;
   console.log("Received data:", { title, content, category, image });
-  const cookieStore = cookies();
+
+  const cookieStore = cookies(); // no await here
+  const token = (await cookieStore).get("token")?.value;
+
+  if (!token) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  let decoded;
+  try {
+    decoded = jwt.verify(token, process.env.JWT_KEY!) as { id: string };
+    console.log("Decoded token:", decoded);
+  } catch (error) {
+    console.error("Invalid token:", error);
+    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+  }
+
+  if (!decoded?.id) {
+    return NextResponse.json({ error: "Invalid token structure" }, { status: 401 });
+  }
 
   try {
-    const token = (await cookieStore).get("token")?.value;
-
-    if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_KEY!) as { id: string };
-    console.log("decoded token:", decoded);
-
-    if (!decoded || !decoded.id) {
-      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
-    }
-
     const user = await prisma.user.findUnique({
-      where: { id: decoded.id }
+      where: { id: decoded.id },
     });
 
     if (!user) {
@@ -34,14 +48,13 @@ export async function POST(request: Request) {
       data: {
         title,
         content,
-        authorId: decoded.id, // ✅ no Number()
+        authorId: decoded.id,
         category,
         image,
       },
     });
 
     return NextResponse.json(newBlogPost, { status: 201 });
-
   } catch (error) {
     console.error("Error creating post:", error);
     return NextResponse.json(

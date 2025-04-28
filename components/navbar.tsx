@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
 
+
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [inactive, setInactive] = useState(true)
@@ -26,6 +27,25 @@ export default function Navbar() {
     }
     fetchUserData()
   }, [])
+
+  const handleLogout = async () => {
+    setIsMenuOpen(false)
+    
+    try {
+      const response = await fetch("/api/user/logout", {
+        method: "GET",
+      })
+      if (response.ok) {
+        setInactive(true)
+        localStorage.removeItem("token")
+        window.location.href = "/auth/login"
+      } else {
+        console.error("Logout failed")
+      }
+    } catch (error) {
+      console.error("Error logging out", error)
+    }
+  }
 
   return (
     <header className="border-b border-teal-100 dark:border-teal-900">
@@ -70,7 +90,7 @@ export default function Navbar() {
                   <Link href="/user/dashboard">Dashboard</Link>
                 </Button>
                 <Button asChild variant="outline" className="border-teal-600 text-teal-600 hover:bg-teal-50">
-                  <Link href="/api/user/logout">Sign Out</Link>
+                  <Link href="" onClick={()=>handleLogout()}>Sign Out</Link>
                 </Button>
               </>
             )}
@@ -128,7 +148,7 @@ export default function Navbar() {
                     </Link>
                   </Button>
                   <Button asChild variant="outline" className="border-teal-600 text-teal-600 hover:bg-teal-50">
-                    <Link href="/api/user/logout" onClick={() => setIsMenuOpen(false)}>
+                    <Link href="" onClick={() => handleLogout()}>
                       Sign Out
                     </Link>
                   </Button>

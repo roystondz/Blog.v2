@@ -9,6 +9,7 @@ export async function GET(req: Request) {
             orderBy: {
                 createdAt: "desc",
             },
+            take: 6
         });
 
         return NextResponse.json(blogs);

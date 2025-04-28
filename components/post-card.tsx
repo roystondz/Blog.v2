@@ -12,9 +12,9 @@ interface Post {
   id: string
   title: string
   excerpt: string
-  coverImage: string
+  image: string
   date: string
-  author: string
+  authorId: string
   category: string
   readingTime: string
 }
@@ -29,7 +29,7 @@ export default function PostCard({ post }: PostCardProps) {
       <div className="rounded-lg overflow-hidden mb-4">
         <Link href={`/blog/${post.id}`}>
           <Image
-            src={post.coverImage || "/placeholder.svg"}
+            src={post.image || "/placeholder.svg"}
             alt={post.title}
             width={600}
             height={400}

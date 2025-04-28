@@ -54,7 +54,12 @@ export default function BlogsPage() {
   };
 
   const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
+    if (category === "All") {
+      setSelectedCategory("");
+    }else{
+      setSelectedCategory(category);
+    }
+    
     setCurrentPage(1); // Reset to page 1 when category changes
   };
 

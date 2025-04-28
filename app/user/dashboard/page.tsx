@@ -51,7 +51,7 @@ export default function UserDashboard() {
     password: '',
     createdAt: '',
     updatedAt: '',
-    profileImage: null,
+    profileImage: '',
     bio: null,
     website: null,
     role: "USER",          // default to USER
@@ -72,19 +72,29 @@ export default function UserDashboard() {
   //     setUserPosts(userPosts.filter((post) => post.id !== id))
   //   }
   // }
+  const [userLoading, setUserLoading] = useState(false)
+  const [userPostsLoaded, setUserPostsLoaded] = useState(false)
 
   useEffect(() => {
     // Fetch user data and posts from API
     const fetchUserData = async () => {
-      const response = await fetch("/api/user/profile")
+      try{
+        const response = await fetch("/api/user/profile")
       const data = await response.json()
-      
+      setUserLoading(true)
       if (response.ok) {
         setUser(data)
-        setLoading(false)
+        
         // Mock user posts
         
       } 
+      }catch (error) {
+        console.error("Error fetching user data", error)
+        
+      }
+      finally {
+        setUserLoading(false)
+      }
       
     }
 
@@ -112,7 +122,7 @@ export default function UserDashboard() {
     fetchUserPosts();
   }, [user])
 
-  if (loading) {  
+  if (loading && userLoading) {  
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-teal-600 border-solid"></div>
@@ -156,7 +166,7 @@ export default function UserDashboard() {
               <div className="flex flex-col items-center text-center mb-6">
                 <div className="w-24 h-24 rounded-full overflow-hidden mb-4 border-2 border-teal-200 dark:border-teal-800">
                   <Image
-                    src={ "/placeholder.svg"}
+                    src={ user.profileImage ||"/placeholder.svg"}
                     alt={user.name || "User Avatar"}
                     width={96}
                     height={96}
@@ -288,7 +298,7 @@ export default function UserDashboard() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                     <div className="bg-teal-50 dark:bg-teal-900 p-4 rounded-lg">
                       <h3 className="text-sm font-medium text-muted-foreground mb-1">Total Posts</h3>
-                      <p className="text-3xl font-bold text-teal-800 dark:text-teal-300">{}</p>
+                      <p className="text-3xl font-bold text-teal-800 dark:text-teal-300">{userPosts.length}</p>
                     </div>
                     <div className="bg-teal-50 dark:bg-teal-900 p-4 rounded-lg">
                       <h3 className="text-sm font-medium text-muted-foreground mb-1">Total Views</h3>

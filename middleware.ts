@@ -20,5 +20,5 @@ export function middleware(request: NextRequest) {
 
 // Apply only to protected routes
 export const config = {
-  matcher: ['/dashboard/:path*', '/profile/:path*'],
+  matcher: [ ]
 };

@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Link from "next/link"
-
+import { UploadButton } from "@uploadthing/react"
 
 interface User {
   id: string;
@@ -161,9 +161,24 @@ export default function EditProfilePage() {
                   <div className="flex items-center gap-4">
                     <Avatar className="h-16 w-16">
                       <AvatarImage src={formData.profileImage || "/placeholder.svg"} alt={formData.name} />
-                      <AvatarFallback className="bg-teal-200 text-teal-800">{formData.name.charAt(0)}</AvatarFallback>
+                      <AvatarFallback className="bg-teal-200 text-teal-800">{formData.name}</AvatarFallback>
                     </Avatar>
-                    <Input id="avatar" type="file" accept="image/*" />
+                    <UploadButton
+  endpoint="imageUploader"
+  onClientUploadComplete={(res:any) => {
+    console.log("Upload completed:", res);
+    // res[0].url will give you the uploaded file's URL
+    const fileUrl = res[0].url;
+    formData.profileImage = fileUrl; // Update the formData with the new image URL
+    console.log("Uploaded file URL:", fileUrl);
+
+    // You can now POST this fileUrl to your backend to save in database
+  }}
+  onUploadError={(error:any) => {
+    alert(`ERROR! ${error.message}`);
+  }}
+/>
+
                   </div>
                 </div>
 

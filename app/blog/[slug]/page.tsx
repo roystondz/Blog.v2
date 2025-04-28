@@ -24,7 +24,7 @@ interface Post {
   content: string;
   category: string;
   image: string;
-  author: string;
+  authorId: string;
   date: string;
   excerpt: string;
   coverImage: string;
@@ -79,15 +79,25 @@ export default function BlogPost() {
           const postData = await postResponse.json();
           setPost(postData);
 
+          console.log("Post Data:", postData);
           // Fetch user profile data
-          const userResponse = await fetch(`/api/user/profile`);
+          const userResponse = await fetch(`/api/user/blogwriter?userId=${postData.authorId}`);
           const userData = await userResponse.json();
           setUser(userData);
 
           // Fetch related posts
           const relatedPostsResponse = await fetch(`/api/blog/related?category=${postData.category}`);
           const relatedPostsData = await relatedPostsResponse.json();
-          setRelatedPosts(relatedPostsData);
+          
+          // Defensive coding
+          if (Array.isArray(relatedPostsData)) {
+            setRelatedPosts(relatedPostsData);
+          } else if (relatedPostsData?.data && Array.isArray(relatedPostsData.data)) {
+            setRelatedPosts(relatedPostsData.data);
+          } else {
+            setRelatedPosts([]); // fallback
+          }
+          
         } catch (error) {
           console.error("Failed to fetch post", error);
         }

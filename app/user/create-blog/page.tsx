@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-
+import { UploadButton } from "@uploadthing/react"
 export default function CreateBlogPage() {
   const router = useRouter()
   const [formData, setFormData] = useState({
@@ -19,7 +19,7 @@ export default function CreateBlogPage() {
     content: "",
     image: null,
   })
-
+  const[loading, setLoading] = useState(false)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
@@ -29,18 +29,44 @@ export default function CreateBlogPage() {
     setFormData((prev) => ({ ...prev, category: value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault(); // Also you missed this! It prevents page reload.
+      setLoading(true); // Set loading to true when form is submitted
+      console.log("Form data submitted:", formData);
     
-    const response = fetch(`/api/blog/create`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-     // Optionally, you can redirect the user to the dashboard or another page
-    router.push("/user/dashboard");
-  }
+      try {
+        const response = await fetch(`/api/blog/create`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+    
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error("Failed to create post:", errorData);
+          // Optionally show error to user
+          return;
+        }
+        
+        // Only after successful post creation, redirect
+        router.push("/user/dashboard");
+      } catch (error) {
+        console.error("Error submitting form:", error);
+      }finally{
+        setLoading(false); // Reset loading state
+      }
+    }
+    
+  if (loading) {
+    return(
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-teal-600 border-solid"></div>
+      </div>
+    )
+      }
 
   return (
     <main className="container mx-auto px-4 py-8">
@@ -83,7 +109,21 @@ export default function CreateBlogPage() {
 
             <div className="space-y-2">
               <Label htmlFor="coverImage">Cover Image</Label>
-              <Input id="coverImage" type="file" accept="image/*" />
+              <UploadButton
+  endpoint="imageUploader"
+  onClientUploadComplete={(res:any) => {
+    console.log("Upload completed:", res);
+    // res[0].url will give you the uploaded file's URL
+    const fileUrl = res[0].url;
+    formData.image  = fileUrl; // Update the formData with the new image URL
+    console.log("Uploaded file URL:", fileUrl);
+
+    // You can now POST this fileUrl to your backend to save in database
+  }}
+  onUploadError={(error:any) => {
+    alert(`ERROR! ${error.message}`);
+  }}
+/>
               <p className="text-xs text-muted-foreground">Recommended size: 1200x600 pixels</p>
             </div>
 

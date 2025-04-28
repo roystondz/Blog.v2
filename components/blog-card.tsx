@@ -9,7 +9,7 @@ interface Post {
   id: string
   title: string
   excerpt: string
-  coverImage: string
+  image: string
   date: string
   author: string
   readingTime: string
@@ -31,7 +31,7 @@ export default function BlogCard({ post }: BlogCardProps) {
       <Link href={`/blog/${post.id}`} className="block">
         <div className="aspect-video overflow-hidden">
           <Image
-            src={post.coverImage || "/placeholder.svg"}
+            src={post.image || "/placeholder.svg"}
             alt={post.title}
             width={600}
             height={400}
