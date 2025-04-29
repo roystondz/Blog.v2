@@ -1,12 +1,17 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
   "/api/user/profile/route": "app/api/user/profile/route.js",
-  "/api/blog/all/route": "app/api/blog/all/route.js",
+  "/api/blog/create/route": "app/api/blog/create/route.js",
   "/api/blog/all-user-blog/route": "app/api/blog/all-user-blog/route.js",
+  "/api/blog/featured/route": "app/api/blog/featured/route.js",
+  "/api/blog/view/route": "app/api/blog/view/route.js",
+  "/api/user/blogwriter/route": "app/api/user/blogwriter/route.js",
+  "/api/blog/related/route": "app/api/blog/related/route.js",
+  "/api/user/logout/route": "app/api/user/logout/route.js",
+  "/api/uploadthing/route": "app/api/uploadthing/route.js",
+  "/user/dashboard/page": "app/user/dashboard/page.js",
+  "/user/edit/page": "app/user/edit/page.js",
+  "/auth/login/page": "app/auth/login/page.js",
   "/page": "app/page.js",
   "/user/create-blog/page": "app/user/create-blog/page.js",
-  "/blogs/page": "app/blogs/page.js",
-  "/auth/login/page": "app/auth/login/page.js",
-  "/blog/[slug]/page": "app/blog/[slug]/page.js",
-  "/user/dashboard/page": "app/user/dashboard/page.js"
+  "/blog/[slug]/page": "app/blog/[slug]/page.js"
 }

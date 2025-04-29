@@ -132,7 +132,9 @@ export default function Home() {
           {featuredPosts.length > 0 ? (
             featuredPosts.map((post) => <BlogCard key={post.id} post={post} />)
           ) : (
-            <p>No featured posts available.</p> // Fallback message
+            <div className="justify-center items-center w-full h-full flex">
+            <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-teal-600 border-solid"></div>
+          </div> // Fallback message
           )}
         </div>
         <div className="text-center mt-10">

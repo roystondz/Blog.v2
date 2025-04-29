@@ -112,9 +112,10 @@ export default function CreateBlogPage() {
               <UploadButton
   endpoint="imageUploader"
   onClientUploadComplete={(res:any) => {
-    console.log("Upload completed:", res);
+    alert("File Uploaded");
     // res[0].url will give you the uploaded file's URL
     const fileUrl = res[0].url;
+    console.log("File URL:", fileUrl);
     formData.image  = fileUrl; // Update the formData with the new image URL
     console.log("Uploaded file URL:", fileUrl);
 

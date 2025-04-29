@@ -25,15 +25,31 @@ export default function SignupPage() {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords don't match")
-      return
-    }
+    try{
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          name: formData.name,
+        }),
+      })
+      if (response.ok) {
+        const data = await response.json()
+        localStorage.setItem("token", data.token)
+        router.push("/auth/login")
+      }
+    }catch(error){
+      console.error("Error signing up:", error)
+    }finally{
 
-    console.log("Signup attempt with:", formData)
+    }
 
     // Mock signup - in a real app, you would send this data to your backend
     // Simulate successful signup
@@ -79,9 +95,8 @@ export default function SignupPage() {
                 name="password"
                 type="password"
                 required
-                name="password"
-                type="password"
-                required
+                
+                
                 value={formData.password}
                 onChange={handleChange}
               />
