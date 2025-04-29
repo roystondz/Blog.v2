@@ -1,8 +1,8 @@
 "use client"
 
-import type React from "react"
+import React from "react"
 
-import { useState } from "react"
+import { use, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
@@ -14,9 +14,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 
-export default function AdminEditUserPage({ params }: { params: { id: string } }) {
+export default function AdminEditUserPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
-  const userId = params.id
+  const { id: userId } = use(params)
 
   // Mock user data - in a real app, you would fetch this based on the userId
   const [formData, setFormData] = useState({
@@ -33,7 +33,45 @@ export default function AdminEditUserPage({ params }: { params: { id: string } }
     posts: 3,
     verified: true,
   })
+const [loading, setLoading] = useState(false)
+  useEffect(() => {
+    // Fetch user data from the server using userId
+    // For now, we are using mock data
+    // In a real app, you would replace this with an API call
+    const fetchUserData = async () => {
+      try {
+        setLoading(true)
+        const response = await fetch(`/api/admin/get-user?id=${userId}`)
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data")
+        }
+        
+        const data = await response.json()
+setFormData({
+  name: data.name ?? "",
+  email: data.email ?? "",
+  bio: data.bio ?? "",
+  location: data.location ?? "",
+  website: data.website ?? "",
+  twitter: data.twitter ?? "",
+  avatar: data.avatar ?? "/placeholder.svg",
+  role: data.role ?? "user",
+  status: data.status ?? "active",
+  joinDate: data.joinDate ?? "",
+  posts: data.posts ?? 0,
+  verified: data.verified ?? false,
+})
 
+      } catch (error) {
+        console.error("Error fetching user data:", error)
+      }finally {
+        setLoading(false)
+      }
+    }
+
+    fetchUserData()
+  }, [userId])
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
@@ -56,12 +94,28 @@ export default function AdminEditUserPage({ params }: { params: { id: string } }
     router.push("/admin/dashboard")
   }
 
-  const handleDeleteUser = () => {
+  const handleDeleteUser = async() => {
     if (confirm("Are you sure you want to permanently delete this user? This action cannot be undone.")) {
       // In a real app, you would send a delete request to your backend
+      const response = await fetch(`/api/admin/delete-user?id=${userId}`, {
+        method: "DELETE",
+      })
+      if (!response.ok) {
+        alert("Failed to delete user. Please try again.")
+        return
+      }
       alert("User deleted successfully!")
       router.push("/admin/dashboard")
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-teal-600 border-solid"></div>
+      </div>
+      
+    )
   }
 
   return (

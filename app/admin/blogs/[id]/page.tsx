@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { use, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
@@ -13,48 +13,61 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 
-export default function AdminEditBlogPage({ params }: { params: { id: string } }) {
+export default function AdminEditBlogPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
-  const blogId = params.id
+  const blogId = use(params).id
 
-  // Mock blog data - in a real app, you would fetch this based on the blogId
+  // Adjusted form data structure based on the provided structure
   const [formData, setFormData] = useState({
-    title: "Getting Started with Web Development",
-    excerpt: "A beginner's guide to modern web development tools and frameworks.",
-    content: `
-      <p>Web development can seem overwhelming at first. With so many languages, frameworks, and tools to choose from, it's hard to know where to start. This guide aims to provide a clear path for beginners.</p>
-      
-      <h2>Understanding the Basics</h2>
-      
-      <p>Before diving into frameworks and libraries, it's essential to have a solid understanding of the core technologies:</p>
-      
-      <ul>
-        <li><strong>HTML</strong>: The backbone of any website, providing structure to your content.</li>
-        <li><strong>CSS</strong>: Responsible for styling and layout, making your websites visually appealing.</li>
-        <li><strong>JavaScript</strong>: Adds interactivity and dynamic behavior to web pages.</li>
-      </ul>
-      
-      <p>Spend time mastering these fundamentals before moving on to more advanced topics. There are plenty of free resources online to help you learn, including MDN Web Docs, freeCodeCamp, and Codecademy.</p>
-    `,
-    coverImage: "/placeholder.svg?height=600&width=1200",
-    category: "technology",
-    author: "Alex Johnson",
-    authorId: "1",
-    date: "April 20, 2025",
-    status: "published",
-    featured: true,
-    allowComments: true,
-    views: 245,
+    id: "",
+    title: "",
+    content: "",
+    published: false,
+    authorId: "",
+    createdAt: "",
+    updatedAt: "",
+    category: "",
+    image: "",
   })
+
+  useEffect(() => {
+    const fetchBlogData = async () => {
+      try {
+        // Mock fetch - in a real app, you would fetch this data from your backend
+        const response = await fetch(`/api/admin/get-post?id=${blogId}`)
+        if (!response.ok) {
+          throw new Error("Failed to fetch blog data")
+        }
+        const data = await response.json()
+
+        // Set form data with the structure you provided
+        setFormData({
+          id: data.id,
+          title: data.title,
+          content: data.content,
+          published: data.published,
+          authorId: data.authorId,
+          createdAt: data.createdAt,
+          updatedAt: data.updatedAt,
+          category: data.category,
+          image: data.image,
+        })
+      } catch (error) {
+        console.error("Error fetching blog data:", error)
+      }
+    }
+
+    fetchBlogData()
+  }, [blogId])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSelectChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+  const handleSelectChange = (field: string, value: string | boolean) => {
+      setFormData((prev) => ({ ...prev, [field]: value }))
+    }
 
   const handleSwitchChange = (field: string, checked: boolean) => {
     setFormData((prev) => ({ ...prev, [field]: checked }))
@@ -69,9 +82,23 @@ export default function AdminEditBlogPage({ params }: { params: { id: string } }
     router.push("/admin/dashboard")
   }
 
-  const handleDeleteBlog = () => {
+  const handleDeleteBlog = async() => {
     if (confirm("Are you sure you want to permanently delete this blog post? This action cannot be undone.")) {
       // In a real app, you would send a delete request to your backend
+      try{
+        const response = await fetch(`/api/admin/delete-post?id=${blogId}`, {
+          method: "DELETE",
+        })
+        if (!response.ok) {
+          throw new Error("Failed to delete blog post")
+        }
+        const data = await response.json()
+        console.log("Blog post deleted:", data)   
+      }catch (error) {
+        console.error("Error deleting blog post:", error)
+        alert("Failed to delete blog post. Please try again.")
+        return
+      }
       alert("Blog post deleted successfully!")
       router.push("/admin/dashboard")
     }
@@ -102,27 +129,27 @@ export default function AdminEditBlogPage({ params }: { params: { id: string } }
               <div className="space-y-4">
                 <div>
                   <p className="text-sm font-medium">Author</p>
-                  <p className="text-sm text-muted-foreground">{formData.author}</p>
+                  <p className="text-sm text-muted-foreground">{formData.authorId}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-medium">Published Date</p>
-                  <p className="text-sm text-muted-foreground">{formData.date}</p>
+                  <p className="text-sm font-medium">Created At</p>
+                  <p className="text-sm text-muted-foreground">{formData.createdAt}</p>
                 </div>
                 <div>
                   <p className="text-sm font-medium">Status</p>
                   <span
                     className={`inline-block px-2 py-1 rounded-full text-xs ${
-                      formData.status === "published"
+                      formData.published
                         ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
                         : "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200"
                     }`}
                   >
-                    {formData.status}
+                    {formData.published ? "Published" : "Draft"}
                   </span>
                 </div>
                 <div>
-                  <p className="text-sm font-medium">Views</p>
-                  <p className="text-sm text-muted-foreground">{formData.views}</p>
+                  <p className="text-sm font-medium">Category</p>
+                  <p className="text-sm text-muted-foreground">{formData.category}</p>
                 </div>
               </div>
               <div className="mt-6 space-y-2">
@@ -141,14 +168,13 @@ export default function AdminEditBlogPage({ params }: { params: { id: string } }
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="status">Status</Label>
-                  <Select value={formData.status} onValueChange={(value) => handleSelectChange("status", value)}>
+                  <Select value={formData.published ? "published" : "draft"} onValueChange={(value) => handleSelectChange("published", value === "published")}>
                     <SelectTrigger id="status">
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="published">Published</SelectItem>
                       <SelectItem value="draft">Draft</SelectItem>
-                      <SelectItem value="pending">Pending Review</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -157,23 +183,14 @@ export default function AdminEditBlogPage({ params }: { params: { id: string } }
                   <Label htmlFor="featured">Featured Post</Label>
                   <Switch
                     id="featured"
-                    checked={formData.featured}
-                    onCheckedChange={(checked) => handleSwitchChange("featured", checked)}
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="allowComments">Allow Comments</Label>
-                  <Switch
-                    id="allowComments"
-                    checked={formData.allowComments}
-                    onCheckedChange={(checked) => handleSwitchChange("allowComments", checked)}
+                    checked={formData.published}
+                    onCheckedChange={(checked) => handleSwitchChange("published", checked)}
                   />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="publishDate">Publish Date</Label>
-                  <Input id="publishDate" type="date" defaultValue="2025-04-20" />
+                  <Input id="publishDate" type="date" defaultValue={formData.createdAt.slice(0, 10)} />
                 </div>
               </div>
             </CardContent>
@@ -199,7 +216,7 @@ export default function AdminEditBlogPage({ params }: { params: { id: string } }
                   <Textarea
                     id="excerpt"
                     name="excerpt"
-                    value={formData.excerpt}
+                    value={formData.content}
                     onChange={handleChange}
                     rows={2}
                     placeholder="Brief summary of the post"
@@ -213,11 +230,9 @@ export default function AdminEditBlogPage({ params }: { params: { id: string } }
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="technology">Technology</SelectItem>
-                      <SelectItem value="lifestyle">Lifestyle</SelectItem>
-                      <SelectItem value="travel">Travel</SelectItem>
-                      <SelectItem value="health">Health</SelectItem>
-                      <SelectItem value="business">Business</SelectItem>
+                      <SelectItem value="Technology">Technology</SelectItem>
+                      <SelectItem value="Lifestyle">Lifestyle</SelectItem>
+                      <SelectItem value="Business">Business</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -226,7 +241,7 @@ export default function AdminEditBlogPage({ params }: { params: { id: string } }
                   <Label htmlFor="coverImage">Cover Image</Label>
                   <div className="mb-2 rounded-lg overflow-hidden">
                     <Image
-                      src={formData.coverImage || "/placeholder.svg"}
+                      src={formData.image || "/placeholder.svg"}
                       alt={formData.title}
                       width={600}
                       height={300}
@@ -247,22 +262,6 @@ export default function AdminEditBlogPage({ params }: { params: { id: string } }
                     className="font-mono"
                     placeholder="Write your blog post content here..."
                   />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="author">Author</Label>
-                  <Select value={formData.authorId} onValueChange={(value) => handleSelectChange("authorId", value)}>
-                    <SelectTrigger id="author">
-                      <SelectValue placeholder="Select author" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">Alex Johnson</SelectItem>
-                      <SelectItem value="2">Emma Roberts</SelectItem>
-                      <SelectItem value="3">Marcus Chen</SelectItem>
-                      <SelectItem value="4">Sophia Williams</SelectItem>
-                      <SelectItem value="5">David Kim</SelectItem>
-                    </SelectContent>
-                  </Select>
                 </div>
 
                 <div className="flex justify-end gap-4">

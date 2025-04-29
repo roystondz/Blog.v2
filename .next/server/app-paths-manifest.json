@@ -1,17 +1,11 @@
 {
   "/api/user/profile/route": "app/api/user/profile/route.js",
-  "/api/blog/create/route": "app/api/blog/create/route.js",
-  "/api/blog/all-user-blog/route": "app/api/blog/all-user-blog/route.js",
-  "/api/blog/featured/route": "app/api/blog/featured/route.js",
-  "/api/blog/view/route": "app/api/blog/view/route.js",
-  "/api/user/blogwriter/route": "app/api/user/blogwriter/route.js",
-  "/api/blog/related/route": "app/api/blog/related/route.js",
-  "/api/user/logout/route": "app/api/user/logout/route.js",
-  "/api/uploadthing/route": "app/api/uploadthing/route.js",
-  "/user/dashboard/page": "app/user/dashboard/page.js",
-  "/user/edit/page": "app/user/edit/page.js",
-  "/auth/login/page": "app/auth/login/page.js",
+  "/api/admin/get-all-users/route": "app/api/admin/get-all-users/route.js",
+  "/api/admin/get-all-posts/route": "app/api/admin/get-all-posts/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/admin/get-user/route": "app/api/admin/get-user/route.js",
+  "/admin/users/[id]/page": "app/admin/users/[id]/page.js",
+  "/admin/dashboard/page": "app/admin/dashboard/page.js",
   "/page": "app/page.js",
-  "/user/create-blog/page": "app/user/create-blog/page.js",
-  "/blog/[slug]/page": "app/blog/[slug]/page.js"
+  "/admin/blogs/[id]/page": "app/admin/blogs/[id]/page.js"
 }

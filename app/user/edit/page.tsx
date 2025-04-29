@@ -167,6 +167,7 @@ export default function EditProfilePage() {
   endpoint="imageUploader"
   onClientUploadComplete={(res:any) => {
     console.log("Upload completed:", res);
+    alert("Image Uploaded");
     // res[0].url will give you the uploaded file's URL
     const fileUrl = res[0].url;
     formData.profileImage = fileUrl; // Update the formData with the new image URL
