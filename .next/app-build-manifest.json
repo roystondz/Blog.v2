@@ -11,6 +11,21 @@
       "static/chunks/main-app.js",
       "static/chunks/app/loading.js"
     ],
+    "/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/page.js"
+    ],
+    "/api/user/profile/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/user/profile/route.js"
+    ],
+    "/api/blog/featured/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/blog/featured/route.js"
+    ],
     "/admin/dashboard/loading": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -21,50 +36,40 @@
       "static/chunks/main-app.js",
       "static/chunks/app/admin/dashboard/page.js"
     ],
-    "/api/user/profile/route": [
+    "/api/admin/get-all-posts/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/api/user/profile/route.js"
-    ],
-    "/admin/login/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/login/page.js"
-    ],
-    "/admin/users/[id]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/users/[id]/page.js"
+      "static/chunks/app/api/admin/get-all-posts/route.js"
     ],
     "/api/admin/get-all-users/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/api/admin/get-all-users/route.js"
     ],
-    "/api/admin/get-user/route": [
+    "/blog/[slug]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/api/admin/get-user/route.js"
+      "static/chunks/app/blog/[slug]/page.js"
     ],
-    "/page": [
+    "/api/blog/view/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/page.js"
+      "static/chunks/app/api/blog/view/route.js"
     ],
-    "/api/blog/featured/route": [
+    "/api/user/blogwriter/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/api/blog/featured/route.js"
+      "static/chunks/app/api/user/blogwriter/route.js"
     ],
-    "/user/dashboard/page": [
+    "/api/blog/related/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/user/dashboard/page.js"
+      "static/chunks/app/api/blog/related/route.js"
     ],
-    "/api/admin/get-all-posts/route": [
+    "/api/admin/publish-post/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/api/admin/get-all-posts/route.js"
+      "static/chunks/app/api/admin/publish-post/route.js"
     ],
     "/admin/blogs/[id]/page": [
       "static/chunks/webpack.js",
@@ -75,16 +80,6 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/api/admin/get-post/route.js"
-    ],
-    "/api/admin/delete-post/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/admin/delete-post/route.js"
-    ],
-    "/api/admin/delete-user/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/admin/delete-user/route.js"
     ],
     "/_not-found/page": [
       "static/chunks/webpack.js",

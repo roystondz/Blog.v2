@@ -12,7 +12,7 @@ interface Post {
   id: string;
   title: string;
   content: string;
-  approved: boolean;
+  published: boolean;
 }
 
 interface User {
@@ -47,11 +47,27 @@ export default function AdminDashboard() {
   }, []);
 
   async function handleApprovePost(id: string) {
-    const res = await fetch(`/api/admin/posts/${id}/approve`, { method: 'PATCH' });
-    if (res.ok) {
-      setPosts(posts.map(p => (p.id === id ? { ...p, approved: true } : p)));
-      toast.success('Post approved');
-    }
+    try{
+      const res = await fetch(`/api/admin/publish-post`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      if (res.ok) {
+        const updatedPost = await res.json();
+        setPosts(posts.map(p => (p.id === id ? updatedPost : p)));
+        toast.success('Post approved');
+      } else {
+        toast.error('Failed to approve post');
+      }
+    }catch (error) {
+      console.error('Error approving post:', error);
+      toast.error('Failed to approve post');
+    } 
+
   }
 
   async function handleDeletePost(id: string) {
@@ -97,21 +113,21 @@ export default function AdminDashboard() {
                         <h2 className="text-lg font-semibold">{post.title}</h2>
                         <p>{post.content}</p>
                         <div className="mt-2">
-                          {post.approved ? (
-                            <Badge variant="default">Approved</Badge>
+                          {post.published ? (
+                            <Badge variant="default">Published</Badge>
                           ) : (
-                            <Badge variant="destructive">Pending</Badge>
+                            <Badge variant="destructive">Not Published</Badge>
                           )}
                         </div>
                       </div>
                       <div className="flex flex-col gap-2">
-                        {!post.approved && (
+                        {!post.published && (
                           <Button
                             onClick={() => handleApprovePost(post.id)}
                             size="sm"
                             variant="outline"
                           >
-                            Approve
+                            Publish
                           </Button>
                         )}
                         <Button

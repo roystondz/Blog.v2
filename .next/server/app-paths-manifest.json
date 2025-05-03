@@ -3,9 +3,14 @@
   "/api/admin/get-all-users/route": "app/api/admin/get-all-users/route.js",
   "/api/admin/get-all-posts/route": "app/api/admin/get-all-posts/route.js",
   "/_not-found/page": "app/_not-found/page.js",
-  "/api/admin/get-user/route": "app/api/admin/get-user/route.js",
-  "/admin/users/[id]/page": "app/admin/users/[id]/page.js",
-  "/admin/dashboard/page": "app/admin/dashboard/page.js",
+  "/api/blog/view/route": "app/api/blog/view/route.js",
+  "/api/user/blogwriter/route": "app/api/user/blogwriter/route.js",
+  "/api/blog/related/route": "app/api/blog/related/route.js",
+  "/api/admin/publish-post/route": "app/api/admin/publish-post/route.js",
+  "/api/admin/get-post/route": "app/api/admin/get-post/route.js",
+  "/api/blog/featured/route": "app/api/blog/featured/route.js",
   "/page": "app/page.js",
+  "/blog/[slug]/page": "app/blog/[slug]/page.js",
+  "/admin/dashboard/page": "app/admin/dashboard/page.js",
   "/admin/blogs/[id]/page": "app/admin/blogs/[id]/page.js"
 }
