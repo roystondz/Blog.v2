@@ -123,10 +123,6 @@ export default function AdminLoginPage() {
                 Return to user login
               </Link>
             </div>
-            <div className="text-xs text-center text-muted-foreground">
-              <p>Demo admin credentials:</p>
-              <p>Email: admin@example.com / Password: admin123</p>
-            </div>
           </CardFooter>
         </Card>
 

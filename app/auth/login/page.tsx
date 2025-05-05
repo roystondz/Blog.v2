@@ -116,6 +116,14 @@ export default function LoginPage() {
             </Link>
           </div>
         </CardFooter>
+        <CardFooter className="flex flex-col space-y-4">
+          <div className="text-sm text-center text-muted-foreground">
+            Admin{" "}
+            <Link href="/admin/login" className="text-teal-600 hover:underline">
+              Login
+            </Link>
+          </div>
+        </CardFooter>
       </Card>
     </div>
   )

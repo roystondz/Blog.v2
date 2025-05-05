@@ -20,14 +20,15 @@ interface Post {
 export default function BlogsPage() {
   const [posts, setPosts] = useState<Post[]>([]); // Initialize as an empty array
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [selectedCategory, setSelectedCategory] = useState<string>("  ");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-
+  const [loading, setLoading] = useState<boolean>(false);
   // Fetch blog posts when component is mounted or any dependency changes
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        setLoading(true);
         const response = await fetch(`/api/blog/all?&category=${selectedCategory}&search=${searchQuery}`);
         if (!response.ok) {
           throw new Error("Failed to fetch posts");
@@ -40,6 +41,8 @@ export default function BlogsPage() {
       } catch (error) {
         console.error("Error fetching posts:", error);
         setPosts([]);  // Fallback to empty array on error
+      }finally {
+        setLoading(false);
       }
     };
 
@@ -66,6 +69,16 @@ export default function BlogsPage() {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="justify-center items-center w-full h-full flex">
+            <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-teal-600 border-solid"></div>
+          </div>
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen container mx-auto px-4 py-8">
@@ -110,12 +123,14 @@ export default function BlogsPage() {
             <BlogCard key={post.id} post={post} />
           ))
         ) : (
-          <p>No posts available.</p> // Show a fallback message if no posts
+          <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center">
+            <p>No posts available.</p>
+          </div> // Show a fallback message if no posts
         )}
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center gap-2 mt-8">
+      <div className="flex justify-center gap-2 mt-8 bottom-0 h-full">
         <Button
           variant="outline"
           size="sm"

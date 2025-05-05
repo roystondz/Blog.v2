@@ -48,7 +48,7 @@ export default function About() {
           </div>
           <div className="rounded-lg overflow-hidden">
             <Image
-              src="https://lcwuyflyet.ufs.sh/f/Zxk6koLkOENoJ8JDi4ZSzQ3vGTu0HkIDhfLZbiogNW1rsMB6"
+              src="https://lcwuyflyet.ufs.sh/f/Zxk6koLkOENoCeQdOtc8is10yR2OuWVZwodHpCXbez5kaMf9"
               alt="Our team collaborating"
               width={800}
               height={600}

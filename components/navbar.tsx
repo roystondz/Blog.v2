@@ -83,9 +83,7 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Button asChild variant="outline" className="border-teal-600 text-teal-600 hover:bg-teal-50">
-                  <Link href="/user/profile">Profile</Link>
-                </Button>
+                
                 <Button asChild className="bg-teal-600 hover:bg-teal-700">
                   <Link href="/user/dashboard">Dashboard</Link>
                 </Button>

@@ -132,9 +132,11 @@ export default function Home() {
           {featuredPosts.length > 0 ? (
             featuredPosts.map((post) => <BlogCard key={post.id} post={post} />)
           ) : (
-            <div className="justify-center items-center w-full h-full flex">
+            <div className="">
+            <div className="flex items-center justify-center">
             <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-teal-600 border-solid"></div>
-          </div> // Fallback message
+          </div> 
+          </div>
           )}
         </div>
         <div className="text-center mt-10">

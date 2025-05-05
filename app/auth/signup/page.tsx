@@ -48,7 +48,7 @@ export default function SignupPage() {
     }catch(error){
       console.error("Error signing up:", error)
     }finally{
-
+      router.push("/auth/login")
     }
 
     // Mock signup - in a real app, you would send this data to your backend

@@ -122,7 +122,7 @@ export default function UserDashboard() {
     fetchUserPosts();
   }, [user])
 
-  if (loading && userLoading) {  
+  if ((loading && userLoading ) || (loading && userPosts.length === 0)) {  
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-teal-600 border-solid"></div>
