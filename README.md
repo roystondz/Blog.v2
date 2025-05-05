@@ -1,8 +1,8 @@
-### MiniBlog - Modern Blogging Platform
+Here's your updated README with Prisma database and environment configuration details included, and your name added:
 
+---
 
-
-
+# MiniBlog - Modern Blogging Platform
 
 MiniBlog is a modern, feature-rich blogging platform built with Next.js and Tailwind CSS. It provides a clean, responsive interface for both readers and writers, with separate user and admin experiences.
 
@@ -10,110 +10,110 @@ MiniBlog is a modern, feature-rich blogging platform built with Next.js and Tail
 
 ### For Readers
 
-- 🏠 Responsive homepage with featured posts
-- 📚 Browse all blogs with filtering and search
-- 👤 View author profiles and their published posts
-- 🌓 Dark/light mode toggle
-- 📱 Mobile-friendly design
-
+* 🏠 Responsive homepage with featured posts
+* 📚 Browse all blogs with filtering and search
+* 👤 View author profiles and their published posts
+* 🌓 Dark/light mode toggle
+* 📱 Mobile-friendly design
 
 ### For Writers
 
-- ✍️ Create, edit, and manage blog posts
-- 📊 Dashboard with post analytics
-- 🖼️ Image upload for profile and blog covers
-- 🏷️ Categorize posts and add tags
-- 📝 Rich content editing experience
-- 📱 Mobile-friendly admin interface
-
+* ✍️ Create, edit, and manage blog posts
+* 📊 Dashboard with post analytics
+* 🖼️ Image upload for profile and blog covers
+* 🏷️ Categorize posts and add tags
+* 📝 Rich content editing experience
+* 📱 Mobile-friendly admin interface
 
 ### For Admins
 
-- 👥 User management (approve, edit, ban users)
-- 📝 Content moderation and management
-- 🔒 Secure admin login
-- 📊 Site-wide analytics
-- ⚙️ System settings and configuration
-- 🛠️ Advanced blog creation and editing tools
-
+* 👥 User management (approve, edit, ban users)
+* 📝 Content moderation and management
+* 🔒 Secure admin login
+* 📊 Site-wide analytics
+* ⚙️ System settings and configuration
+* 🛠️ Advanced blog creation and editing tools
 
 ## Tech Stack
 
-- **Framework**: Next.js 14 (App Router)
-- **Styling**: Tailwind CSS
-- **UI Components**: shadcn/ui
-- **Authentication**: (Ready for integration)
-- **Database**: (Ready for integration)
-- **Deployment**: Vercel-ready
-
+* **Framework**: Next.js 14 (App Router)
+* **Styling**: Tailwind CSS
+* **UI Components**: shadcn/ui
+* **Authentication**: (Ready for integration)
+* **Database**: Prisma + PostgreSQL (or your DB of choice)
+* **Deployment**: Vercel-ready
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18.x or later
-- npm or yarn
+* Node.js 18.x or later
+* npm or yarn
+* PostgreSQL (or other supported DB)
 
+### Environment Variables
+
+Create a `.env` file in the root directory and add the following:
+
+```env
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE"
+JWT_KEY="yoursecret" # For authentication (when integrated)
+UPLOADTHING_TOKEN="JDFBASEIP...." (Make an account to upload photos)
+```
+
+> Replace `USER`, `PASSWORD`, `HOST`, `PORT`, and `DATABASE` with your PostgreSQL credentials.
 
 ### Installation
 
 1. Clone the repository:
 
-```shellscript
-git clone https://github.com/yourusername/miniblog.git
-cd miniblog
+```bash
+git clone https://github.com/roystondz/Blog.v2.git
+cd Blog.v2
 ```
-
 
 2. Install dependencies:
 
-```shellscript
+```bash
 npm install
 # or
 yarn install
 ```
 
+3. Set up the database with Prisma:
 
-3. Run the development server:
+```bash
+npx prisma generate
+npx prisma migrate dev --name init
+```
 
-```shellscript
+4. Run the development server:
+
+```bash
 npm run dev
 # or
 yarn dev
 ```
 
-
-4. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
-
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Usage
 
 ### User Access
 
-- **Homepage**: Browse featured posts and latest content
-- **Blog Listing**: View all published blog posts
-- **User Registration**: Create a new account
-- **User Login**: Access your dashboard with demo credentials:
+* **Homepage**: Browse featured posts and latest content
+* **Blog Listing**: View all published blog posts
+* **User Registration**: Create a new account
 
-- Email: `user@example.com`
-- Password: `password`
-
-
-
-
+  * Email: `user@example.com`
+  * Password: `password`
 
 ### Admin Access
+(make a account where the role is {ROLE="ADMIN"})
+* **Admin Login**: Access the admin portal at `/admin/login` with demo credentials:
 
-- **Admin Login**: Access the admin portal at `/admin/login` with demo credentials:
-
-- Email: `admin@example.com`
-- Password: `admin123`
-
-
-
-- **Admin Dashboard**: Manage users, posts, and site settings
-- **Content Creation**: Create and publish blog posts with advanced options
-
+  * Email: `admin@example.com`
+  * Password: `admin123`
 
 ## Project Structure
 
@@ -131,7 +131,9 @@ miniblog/
 │   ├── ui/                 # shadcn/ui components
 │   └── ...                 # Custom components
 ├── lib/                    # Utility functions
+├── prisma/                 # Prisma schema and client
 ├── public/                 # Static assets
+├── .env                    # Environment variables
 └── ...
 ```
 
@@ -139,60 +141,35 @@ miniblog/
 
 ### Regular Users
 
-- Create and manage their own blog posts
-- Edit their profile information
-- View analytics for their own posts
-- Comment on blog posts (when implemented)
-
+* Create and manage their own blog posts
+* Edit their profile information
+* View analytics for their own posts
+* Comment on blog posts (when implemented)
 
 ### Admin Users
 
-- All regular user capabilities
-- Manage all users (approve, edit, ban)
-- Manage all blog posts (create, edit, delete)
-- Access system settings and configurations
-- View site-wide analytics
-
+* All regular user capabilities
+* Manage all users (approve, edit, ban)
+* Manage all blog posts (create, edit, delete)
+* Access system settings and configurations
+* View site-wide analytics
 
 ## Screenshots
 
-### Homepage
-
-
-
-
-
-### Blog Post
-
-
-
-
-
-### User Dashboard
-
-
-
-
-
-### Admin Dashboard
-
-
-
-
+[Loading...]
 
 ## Roadmap
 
-- Database integration
-- Authentication system
-- Comment system
-- Rich text editor
-- Image upload functionality
-- Search functionality
-- Email notifications
-- Social sharing
-- Analytics dashboard
-- Mobile app
-
+* ✅ Prisma database integration
+* 🔐 Authentication system
+* 💬 Comment system
+* 📝 Rich text editor
+* 🖼️ Image upload functionality
+* 🔍 Search functionality
+* 📧 Email notifications
+* 🔗 Social sharing
+* 📊 Analytics dashboard
+* 📱 Mobile app
 
 ## Contributing
 
@@ -204,19 +181,21 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
 
-- [Next.js](https://nextjs.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [shadcn/ui](https://ui.shadcn.com/)
-- [Lucide Icons](https://lucide.dev/)
-
+* [Next.js](https://nextjs.org/)
+* [Tailwind CSS](https://tailwindcss.com/)
+* [shadcn/ui](https://ui.shadcn.com/)
+* [Lucide Icons](https://lucide.dev/)
 
 ---
 
-Built with ❤️ by [Your Name]
+Built with ❤️ by **Roystn Akash Dsouza**
+
+---
+
+Would you like help integrating authentication next using NextAuth.js and Prisma?
