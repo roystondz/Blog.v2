@@ -1,6 +1,3 @@
-Here's your updated README with Prisma database and environment configuration details included, and your name added:
-
----
 
 # MiniBlog - Modern Blogging Platform
 
